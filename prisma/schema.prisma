@@ -29,7 +29,6 @@ enum Role {
   ADMIN
   READ
 }
-
 model Store {
   id             String         @id @default(uuid())
   name           String
@@ -47,8 +46,8 @@ model Store {
 model Category {
   id           String     @id @default(uuid())
   name         String
-  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId String
+  store        Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId      String
   products     Products[]
   createdAt    DateTime   @default(now())
   updateAt     DateTime   @updatedAt
@@ -61,10 +60,10 @@ model Products {
   price          Float
   imageUrl       String
   ingredients    String[]
-  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId   String
-  category      Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String
+  store          Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId        String
+  category       Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId     String
   orderProduct   OrderProduct[]
   createdAt      DateTime       @default(now())
   updateAt       DateTime       @updatedAt
@@ -76,9 +75,9 @@ model Order {
   customerName      String
   customerCpf       String
   status            OrderStatus
-  consumptionMethod ConsumptionMethod
-  store        Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId      String
+  method            Method
+  store             Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId           String
   orderProducts     OrderProduct[]
   createdAt         DateTime          @default(now())
   updateAt          DateTime          @updatedAt
@@ -104,7 +103,8 @@ enum OrderStatus {
   FINISHED
 }
 
-enum ConsumptionMethod {
-  TAKEAWAY
-  DINE_IN
+enum Method {
+  MAIL
+  MOTORBIKE
+  PICKUP   
 }
