@@ -38,7 +38,7 @@ const StoreHeader = ({ store }: StoreHeaderProps) => {
       <Image
         src={store?.coverImageUrl}
         alt={store?.name}
-        fill
+        fill={true}
         className="object-contain"
       />
       <Button

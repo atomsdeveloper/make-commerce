@@ -82,7 +82,7 @@ const OrderList = ({ orders }: OrderListProps) => {
                   src={order.store.avatarImageUrl}
                   alt={order.store.name}
                   className="rounded-sm"
-                  fill
+                  fill={true}
                 />
               </div>
               <p className="text-sm font-semibold">{order.store.name}</p>

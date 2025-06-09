@@ -39,7 +39,7 @@ const ProductsHeader = ({ product }: ProductsHeaderProps) => {
       <Image
         src={product.imageUrl}
         alt={product.name}
-        fill
+        fill={true}
         className="object-contain"
       />
 

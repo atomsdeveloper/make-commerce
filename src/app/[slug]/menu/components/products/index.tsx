@@ -37,7 +37,7 @@ const ProductsList = ({ products }: ProductsListProps) => {
             <Image
               src={product.imageUrl}
               alt={product.name}
-              fill
+              fill={true}
               className="rounded-lg object-contain"
             />
           </div>
