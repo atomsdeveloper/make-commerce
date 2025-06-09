@@ -18,6 +18,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
+import { CartProvider } from "../app/[slug]/menu/context/cart";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,16 +27,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="h-full">
-      <body className={`${poppins.className} dark antialiased h-full`}>
-        {" "}
-        <ClerkProvider
-          dynamic
-          appearance={{
-            baseTheme: dark,
-          }}
-        >
-          {children}
-        </ClerkProvider>
+      <body className={`${poppins.className} antialiased h-full`}>
+        <CartProvider>
+          <ClerkProvider
+            dynamic
+            appearance={{
+              baseTheme: dark,
+            }}
+          >
+            {children}
+          </ClerkProvider>
+        </CartProvider>
       </body>
     </html>
   );
