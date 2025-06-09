@@ -70,8 +70,8 @@ const ProductsDetails = ({ product }: ProductsDetailsProps) => {
   return (
     <>
       <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl p-3 flex-auto flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-hidden">
-          {/* restaurant */}
+        <div className="h-full overflow-hidden">
+          {/* store */}
           <div className="flex items-center gap-1.5 rounded-full">
             <Image
               src={product.store.avatarImageUrl}
@@ -111,9 +111,9 @@ const ProductsDetails = ({ product }: ProductsDetailsProps) => {
             </div>
           </div>
 
-          <ScrollArea className="h-full">
+          <ScrollArea className="max-h-72 overflow-auto">
             {/* about */}
-            <div className="mt-6 space-y-2 h-1/2">
+            <div className="mt-6 space-y-2">
               <h4 className="font-semibold">Sobre</h4>
               <p className="text-sm text-muted-foreground">
                 {product.description}
@@ -121,7 +121,7 @@ const ProductsDetails = ({ product }: ProductsDetailsProps) => {
             </div>
 
             {/* ingredients */}
-            <div className="mt-6 space-y-2 1/2">
+            <div className="mt-6 space-y-2 h-full">
               <div className="flex items-center gap-1">
                 <ChefHatIcon size={16} />
                 <h4 className="font-semibold">Composições</h4>

@@ -26,7 +26,7 @@ const ProductsHeader = ({ product }: ProductsHeaderProps) => {
   const handleOrdersClick = () => router.push(`/${slug}/orders`);
 
   return (
-    <div className="relative min-h-[300px] w-full">
+    <div className="relative min-h-[255px] w-full">
       <Button
         onClick={handleBackClick}
         variant="secondary"
