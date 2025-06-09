@@ -1,11 +1,14 @@
 "use server";
 
-import { Method } from "@prisma/client";
+// Next
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+// Database
 import { db } from "../../../../lib/prisma";
+import { Method } from "@prisma/client";
 
+// Helpers
 import { removeCpfPunctuation } from "../../../../helpers/cpf";
 
 interface CreateOrderInputProps {
@@ -56,6 +59,10 @@ export const createOrder = async (input: CreateOrderInputProps) => {
     };
   });
 
+  if (productsWithPriceAndQuantities.length === 0) {
+    throw new Error("Nenhum produto válido foi enviado para o pedido.");
+  }
+
   await db.order.create({
     data: {
       status: "PENDING",
@@ -63,15 +70,23 @@ export const createOrder = async (input: CreateOrderInputProps) => {
       customerCpf: removeCpfPunctuation(input.customerCpf),
       orderProducts: {
         createMany: {
-          data: productsWithPriceAndQuantities,
+          data:
+            productsWithPriceAndQuantities.length > 0
+              ? productsWithPriceAndQuantities
+              : [],
         },
       },
-      total: productsWithPriceAndQuantities.reduce(
-        (acc, product) => acc + product.price * product.quantity,
-        0
-      ),
-      method: input.consumptionMethod,
-      storeId: store.id,
+      total:
+        productsWithPriceAndQuantities.length > 0
+          ? productsWithPriceAndQuantities.reduce(
+              (acc, product) => acc + product.price * product.quantity,
+              0
+            )
+          : 0,
+      method: input?.consumptionMethod,
+      store: {
+        connect: { id: store.id },
+      },
     },
   });
   revalidatePath(`/${input.slug}/orders`); // Limpa cache antes de redirecionar á página.
