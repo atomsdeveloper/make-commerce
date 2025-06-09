@@ -124,7 +124,7 @@ const ProductsDetails = ({ product }: ProductsDetailsProps) => {
             <div className="mt-6 space-y-2 1/2">
               <div className="flex items-center gap-1">
                 <ChefHatIcon size={16} />
-                <h4 className="font-semibold">Ingredientes</h4>
+                <h4 className="font-semibold">Composições</h4>
               </div>
               <div className="text-sm text-muted-foreground">
                 <ul className="list-disc px-5 text-sm text-muted-foreground">

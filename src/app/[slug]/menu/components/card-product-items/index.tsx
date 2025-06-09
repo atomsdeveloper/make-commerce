@@ -25,7 +25,7 @@ const CartProductItem = ({ product }: CartProductItemProps) => {
     removeProductCart,
   } = useContext(CartContext);
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between p-2">
       <div className="flex items-center gap-3">
         <div className="relative h-20 w-20 rounded-xl bg-gray-100">
           <Image src={product.imageUrl} alt={product.name} fill />

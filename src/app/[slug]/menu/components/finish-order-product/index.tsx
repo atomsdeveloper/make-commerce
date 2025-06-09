@@ -93,9 +93,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
     shouldUnregister: true,
   });
 
-  const consumptionMethod = useSearchParams().get(
-    "consumptionMethod"
-  ) as Method;
+  const consumptionMethod = useSearchParams().get("method") as Method;
 
   // Só vai ser executado se os dados do formulário forem válidos.
   const onSubmit = async (data: TypeFormSchema) => {

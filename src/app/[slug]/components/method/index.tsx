@@ -2,7 +2,7 @@
 import { Method as MethodOption } from "@prisma/client";
 
 // Next
-// import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "../../../../components/ui/button";
@@ -18,8 +18,8 @@ interface MethodProps {
 
 const Method = ({
   slug,
-  // imageAlt,
-  // imageUrl,
+  imageAlt,
+  imageUrl,
   buttonText,
   option,
 }: MethodProps) => {
@@ -27,14 +27,13 @@ const Method = ({
     <Card>
       <CardContent className="flex flex-col items-center gap-8 py-8">
         <div className="relative h-[80px] w-[80px]">
-          {/* <Image
+          <Image
             src={imageUrl}
             alt={imageAlt}
-            // width={78}
-            // height={80}
-            fill
+            width={100}
+            height={100}
             className="object-contain"
-          /> */}
+          />
         </div>
         <Button variant="secondary" className="rounded-full" asChild>
           <Link href={`${slug}/menu?method=${option}`}>{buttonText}</Link>

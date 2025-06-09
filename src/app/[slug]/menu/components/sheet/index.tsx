@@ -35,7 +35,7 @@ const CartSheet = () => {
             ))}
           </div>
 
-          <Card className="mb-4">
+          <Card className="mb-4 h-[100px] flex justify-center">
             <CardContent className="p-5">
               <div className="flex-justify-between">
                 <p className="text-muted-foreground text-sm">Total</p>
