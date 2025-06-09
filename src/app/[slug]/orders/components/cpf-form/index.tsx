@@ -37,10 +37,6 @@ import { isValidCpf, removeCpfPunctuation } from "../../../../../helpers/cpf";
 
 // Craindo esquema de válidação de formulário com o zod.
 export const formSchema = z.object({
-  // Dados do formúlario.
-  name: z.string().trim().min(1, {
-    message: "O nome é obrigatório",
-  }),
   cpf: z
     .string()
     .trim()
