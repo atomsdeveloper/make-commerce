@@ -7,7 +7,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Ravie",
+  title: "Software Company",
   description: "E-commerce of sales for placing orders.",
 };
 
