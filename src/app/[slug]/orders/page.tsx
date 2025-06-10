@@ -35,6 +35,7 @@ const OrdersPage = async ({ searchParams }: OrderPageProps) => {
         select: {
           name: true,
           avatarImageUrl: true,
+          stripeAccountId: true,
         },
       },
 
