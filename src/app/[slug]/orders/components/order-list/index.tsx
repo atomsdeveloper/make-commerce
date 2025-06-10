@@ -1,7 +1,7 @@
 "use client";
 
 // Database
-import { OrderStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 // Icons
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
@@ -15,8 +15,13 @@ import { Separator } from "@radix-ui/react-separator";
 import { Button } from "../../../../../components/ui/button";
 import { Card, CardContent } from "../../../../../components/ui/card";
 
+// Components
+import CheckoutButton from "./components/checkout-button";
+
 // Helpers
 import { formatCurrency } from "../../../../../helpers/format-currency";
+import { getStatusLabel } from "../../../../../helpers/getStatusLabel";
+import { getStyleClass } from "../../../../../helpers/getStyleClass";
 
 interface OrderListProps {
   orders: Array<
@@ -26,6 +31,7 @@ interface OrderListProps {
           select: {
             name: true;
             avatarImageUrl: true;
+            stripeAccountId: true;
           };
         };
         orderProducts: {
@@ -37,14 +43,6 @@ interface OrderListProps {
     }>
   >;
 }
-
-const getStatusLabel = (status: OrderStatus) => {
-  if (status === "FINISHED") return "Finalizado";
-  if (status === "IN_PREPARATION") return "Em preparo";
-  if (status === "PENDING") return "Pendente";
-
-  return "";
-};
 
 const OrderList = ({ orders }: OrderListProps) => {
   const router = useRouter();
@@ -68,11 +66,9 @@ const OrderList = ({ orders }: OrderListProps) => {
         <Card key={order.id}>
           <CardContent className="space-y-4 p-5">
             <div
-              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${
-                order.status === OrderStatus.FINISHED
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-200 text-gray-500"
-              } `}
+              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold 
+                ${getStyleClass(order.status)}
+              `}
             >
               {getStatusLabel(order.status)}
             </div>
@@ -100,6 +96,16 @@ const OrderList = ({ orders }: OrderListProps) => {
             </div>
             <Separator />
             <p className="text-sm font-medium">{formatCurrency(order.total)}</p>
+
+            <CheckoutButton
+              items={order.orderProducts.map((op) => ({
+                name: op.product.name,
+                price_cents: op.product.price * 100,
+                quantity: op.quantity,
+              }))}
+              sellerAccountId={order?.store?.stripeAccountId}
+              status={order.status}
+            />
           </CardContent>
         </Card>
       ))}
