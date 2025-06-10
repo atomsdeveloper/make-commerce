@@ -58,6 +58,19 @@ export default {
       },
     },
   },
+  safelist: [
+    "bg-green-600",
+    "hover:bg-green-700",
+    "text-white",
+    "bg-blue-600",
+    "hover:bg-blue-700",
+    "bg-gray-500",
+    "hover:bg-gray-600",
+    "bg-red-600",
+    "hover:bg-red-700",
+    "bg-gray-200",
+    "text-gray-500",
+  ],
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
