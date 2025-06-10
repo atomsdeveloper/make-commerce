@@ -24,7 +24,7 @@ const Method = ({
   option,
 }: MethodProps) => {
   return (
-    <Card>
+    <Card className="py-0">
       <CardContent className="flex flex-col items-center gap-8 py-8">
         <div className="relative h-[80px] w-[80px]">
           <Image
