@@ -32,7 +32,7 @@ const LoginPage = () => {
   // Se o usuário já estiver logado, redireciona pra home
   useEffect(() => {
     if (isSignedIn) {
-      router.replace("/ravie");
+      router.replace("/software-company");
     }
   }, [isSignedIn, router]);
 
