@@ -1,7 +1,5 @@
-"use client";
-
 // Hooks React
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 // Axios
 import axios from "axios";
@@ -12,10 +10,6 @@ import { OrderStatus } from "@prisma/client";
 // Components UI
 import { Button } from "../../../../../../../components/ui/button";
 
-// Helpers
-import { getStatusLabel } from "../../../../../../../helpers/getStatusLabel";
-import { getStyleClass } from "../../../../../../../helpers/getStyleClass";
-
 interface CheckoutButtonProps {
   items: {
     name: string;
@@ -24,41 +18,54 @@ interface CheckoutButtonProps {
   }[];
   sellerAccountId: string | null;
   status: OrderStatus;
+  children: React.ReactElement;
 }
 
 const CheckoutButton = ({
   items,
   sellerAccountId,
   status,
+  children,
 }: CheckoutButtonProps) => {
-  const [unable, setUnable] = useState(false);
-
-  useEffect(() => {
-    if (status === "FINISHED" || status === "PAYMENT_CONFIRMED") {
-      setUnable(true);
-    } else {
-      setUnable(false);
-    }
-  }, [status]);
+  const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
-    setUnable(true);
-    const res = await axios.post("/api/create-checkout-session", {
-      items,
-      sellerAccountId,
-    });
-    window.location.href = res.data.url;
-    setUnable(false);
+    setLoading(true);
+    try {
+      const res = await axios.post("/api/create-checkout-session", {
+        items,
+        sellerAccountId,
+      });
+      window.location.href = res.data.url;
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Só mostra o botão se o status for PENDING ou PAYMENT_FAILED
+  if (
+    status === "FINISHED" ||
+    status === "IN_PREPARATION" ||
+    status === "PAYMENT_CONFIRMED"
+  ) {
+    return null;
+  }
+
   return (
-    <Button
-      onClick={handleClick}
-      disabled={unable}
-      className={`w-48 ${getStyleClass(status)}`}
-    >
-      {getStatusLabel(status)}
-    </Button>
+    <>
+      {loading ? (
+        <h1>Loading </h1>
+      ) : (
+        <Button
+          onClick={handleClick}
+          disabled={loading}
+          variant="outline"
+          className={`h-full w-full text-left hover:bg-none`}
+        >
+          {children}
+        </Button>
+      )}
+    </>
   );
 };
 
