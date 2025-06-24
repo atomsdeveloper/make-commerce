@@ -29,7 +29,12 @@ const CheckoutButton = ({
 }: CheckoutButtonProps) => {
   const [loading, setLoading] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    console.log(`Função do Pedido clicada. status: ${status}`);
     setLoading(true);
     try {
       const res = await axios.post("/api/create-checkout-session", {
@@ -57,7 +62,7 @@ const CheckoutButton = ({
         <h1>Loading </h1>
       ) : (
         <Button
-          onClick={handleClick}
+          onClick={(e) => handleClick(e)}
           disabled={loading}
           className={`h-full w-full text-left bg-transparent hover:bg-transparent`}
         >

@@ -4,24 +4,22 @@ import { NextRequest, NextResponse } from "next/server";
 // Stripe
 import stripe from "../../../config/stripe";
 
+type CheckoutItem = {
+  name: string;
+  price: number;
+  price_cents: number;
+  quantity: number;
+};
+
 export async function POST(req: NextRequest) {
   const { items, sellerAccountId } = await req.json();
-
-  if (!sellerAccountId) {
-    return NextResponse.json(
-      { error: "Conta do vendedor não encontrada." },
-      { status: 400 }
-    );
-  }
 
   const amount = calculateTotal(items);
   const applicationFee = Math.round(amount * 0.1);
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    line_items: items.map((item: any) => ({
+    line_items: (items as CheckoutItem[]).map((item: CheckoutItem) => ({
       price_data: {
         currency: "brl",
         product_data: { name: item.name },
@@ -32,20 +30,20 @@ export async function POST(req: NextRequest) {
     mode: "payment",
     payment_intent_data: {
       application_fee_amount: applicationFee,
-      transfer_data: { destination: sellerAccountId },
+      ...(sellerAccountId && {
+        transfer_data: { destination: sellerAccountId },
+      }),
     },
     success_url: `${req.headers.get("origin")}/checkout-return?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${req.headers.get("origin")}/checkout?canceled=true`,
   });
-
   return NextResponse.json({ url: session.url });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function calculateTotal(items: any) {
   if (!Array.isArray(items)) return 0;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return items.reduce((total: number, item: any) => {
+  return items.reduce((total: number, item: CheckoutItem) => {
     const price = typeof item.price === "number" ? item.price : 0;
     const quantity = typeof item.quantity === "number" ? item.quantity : 1;
     return total + price * quantity;
