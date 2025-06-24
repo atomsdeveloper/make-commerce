@@ -59,8 +59,7 @@ const CheckoutButton = ({
         <Button
           onClick={handleClick}
           disabled={loading}
-          variant="outline"
-          className={`h-full w-full text-left hover:bg-none`}
+          className={`h-full w-full text-left bg-transparent hover:bg-transparent`}
         >
           {children}
         </Button>
