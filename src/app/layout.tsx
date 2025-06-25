@@ -19,6 +19,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
 import { CartProvider } from "../app/[slug]/menu/context/cart";
+import { MethodProvider } from "./[slug]/context/MethodContext";
 
 export default function RootLayout({
   children,
@@ -29,14 +30,16 @@ export default function RootLayout({
     <html lang="pt-BR" className="h-full">
       <body className={`${poppins.className} antialiased h-full`}>
         <CartProvider>
-          <ClerkProvider
-            dynamic
-            appearance={{
-              baseTheme: dark,
-            }}
-          >
-            {children}
-          </ClerkProvider>
+          <MethodProvider>
+            <ClerkProvider
+              dynamic
+              appearance={{
+                baseTheme: dark,
+              }}
+            >
+              {children}
+            </ClerkProvider>
+          </MethodProvider>
         </CartProvider>
       </body>
     </html>

@@ -1,3 +1,5 @@
+"use client";
+
 // Database
 import { Method as MethodOption } from "@prisma/client";
 
@@ -7,6 +9,7 @@ import Link from "next/link";
 
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
+import { useMethod } from "../../context/MethodContext";
 
 interface MethodProps {
   slug: string;
@@ -23,6 +26,13 @@ const Method = ({
   buttonText,
   option,
 }: MethodProps) => {
+  const { setMethod } = useMethod();
+
+  const handleSaveMethod = () => {
+    setMethod(option);
+    console.log(option);
+  };
+
   return (
     <Card className="py-0">
       <CardContent className="flex flex-col items-center gap-8 py-8">
@@ -35,7 +45,12 @@ const Method = ({
             className="object-contain"
           />
         </div>
-        <Button variant="secondary" className="rounded-full" asChild>
+        <Button
+          variant="secondary"
+          className="rounded-full"
+          asChild
+          onClick={handleSaveMethod}
+        >
           <Link href={`${slug}/menu?method=${option}`}>{buttonText}</Link>
         </Button>
       </CardContent>

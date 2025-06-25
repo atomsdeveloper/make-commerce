@@ -8,7 +8,7 @@ import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 
 // Next
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 // Components UI
 import { Separator } from "@radix-ui/react-separator";
@@ -18,10 +18,14 @@ import { Card, CardContent } from "../../../../../components/ui/card";
 // Components
 import CheckoutButton from "./components/checkout-button";
 
+// Context
+import { useMethod } from "../../../context/MethodContext";
+
 // Helpers
 import { formatCurrency } from "../../../../../helpers/format-currency";
 import { getStatusTextTag } from "../../../../../helpers/getStatusTextTag";
 import { getStyleClassTag } from "@/src/helpers/getStyleClassTag";
+
 interface OrderListProps {
   orders: Array<
     Prisma.OrderGetPayload<{
@@ -45,7 +49,14 @@ interface OrderListProps {
 
 const OrderList = ({ orders }: OrderListProps) => {
   const router = useRouter();
-  const handleBackClick = () => router.back();
+  const params = useParams();
+  const { method } = useMethod();
+
+  const slug = params.slug as string;
+
+  const handleBackClick = () => {
+    router.replace(`/${slug}/menu?method=${method}`);
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -57,10 +68,12 @@ const OrderList = ({ orders }: OrderListProps) => {
       >
         <ChevronLeftIcon />
       </Button>
+
       <div className="flex items-center gap-3">
         <ScrollTextIcon />
         <h2 className="text-lg font-semibold">Meus Pedidos</h2>
       </div>
+
       {orders.map((order) => (
         <CheckoutButton
           key={order.id}
@@ -77,7 +90,7 @@ const OrderList = ({ orders }: OrderListProps) => {
               <div
                 className={`w-fit rounded-full px-2 py-1 text-xs font-semibold 
                 ${getStyleClassTag(order.status)}
-                `}
+              `}
               >
                 {getStatusTextTag(order.status)}
               </div>
