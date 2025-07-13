@@ -9,8 +9,8 @@ import StoreCategories from "./components/categories";
 import StoreHeader from "./components/header";
 
 interface StoreMenuProps {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ method: string }>;
+  params: { slug: string };
+  searchParams: { method: string };
 }
 
 const hasMethod = (method: string) => {
@@ -18,8 +18,8 @@ const hasMethod = (method: string) => {
 };
 
 const StoreMenuPage = async ({ params, searchParams }: StoreMenuProps) => {
-  const { slug } = await params;
-  const { method } = await searchParams;
+  const { slug } = params;
+  const { method } = searchParams;
 
   if (!hasMethod(method)) {
     return notFound;
@@ -34,7 +34,7 @@ const StoreMenuPage = async ({ params, searchParams }: StoreMenuProps) => {
     },
   });
   if (!store) {
-    return notFound;
+    notFound();
   }
 
   return (

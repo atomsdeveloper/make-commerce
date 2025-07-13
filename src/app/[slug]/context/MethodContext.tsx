@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Method } from "@prisma/client";
 
 interface MethodContextType {
@@ -12,6 +12,13 @@ const MethodContext = createContext<MethodContextType | undefined>(undefined);
 
 export const MethodProvider = ({ children }: { children: React.ReactNode }) => {
   const [method, setMethod] = useState<Method | null>(null);
+
+  useEffect(() => {
+    const methodFromStorage = localStorage.getItem("method") as Method | null;
+    if (methodFromStorage) {
+      setMethod(methodFromStorage);
+    }
+  }, []);
 
   return (
     <MethodContext.Provider value={{ method, setMethod }}>

@@ -18,13 +18,11 @@ import { Card, CardContent } from "../../../../../components/ui/card";
 // Components
 import CheckoutButton from "./components/checkout-button";
 
-// Context
-import { useMethod } from "../../../context/MethodContext";
-
 // Helpers
 import { formatCurrency } from "../../../../../helpers/format-currency";
 import { getStatusTextTag } from "../../../../../helpers/getStatusTextTag";
 import { getStyleClassTag } from "@/src/helpers/getStyleClassTag";
+import { useEffect, useState } from "react";
 
 interface OrderListProps {
   orders: Array<
@@ -50,9 +48,15 @@ interface OrderListProps {
 const OrderList = ({ orders }: OrderListProps) => {
   const router = useRouter();
   const params = useParams();
-  const { method } = useMethod();
 
   const slug = params.slug as string;
+
+  const [method, setMethod] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedMethod = localStorage.getItem("method");
+    setMethod(storedMethod);
+  }, []);
 
   const handleBackClick = () => {
     router.replace(`/${slug}/menu?method=${method}`);

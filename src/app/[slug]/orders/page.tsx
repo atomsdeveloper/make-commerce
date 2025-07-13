@@ -1,3 +1,5 @@
+"use server";
+
 // Database
 import { db } from "../../../lib/prisma";
 
@@ -9,11 +11,11 @@ import CpfForm from "./components/cpf-form";
 import OrderList from "./components/order-list";
 
 interface OrderPageProps {
-  searchParams: Promise<{ cpf: string }>;
+  searchParams: { cpf?: string };
 }
 
 const OrdersPage = async ({ searchParams }: OrderPageProps) => {
-  const { cpf } = await searchParams;
+  const { cpf } = searchParams;
 
   if (!cpf) {
     return <CpfForm />;
@@ -32,11 +34,7 @@ const OrdersPage = async ({ searchParams }: OrderPageProps) => {
     },
     include: {
       store: {
-        select: {
-          name: true,
-          avatarImageUrl: true,
-          stripeAccountId: true,
-        },
+        select: { name: true, avatarImageUrl: true, stripeAccountId: true },
       },
 
       orderProducts: {

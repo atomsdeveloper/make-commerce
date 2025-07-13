@@ -7,8 +7,11 @@ import { Method as MethodOption } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
+// Components UI
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
+
+// Context
 import { useMethod } from "../../context/MethodContext";
 
 interface MethodProps {
@@ -29,8 +32,8 @@ const Method = ({
   const { setMethod } = useMethod();
 
   const handleSaveMethod = () => {
-    setMethod(option);
-    console.log(option);
+    setMethod(option); // salva no context
+    localStorage.setItem("method", option); // salva no localStorage
   };
 
   return (
