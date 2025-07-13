@@ -1,3 +1,5 @@
+"use server";
+
 // Next
 import { notFound } from "next/navigation";
 
@@ -9,8 +11,8 @@ import StoreCategories from "./components/categories";
 import StoreHeader from "./components/header";
 
 interface StoreMenuProps {
-  params: { slug: string };
-  searchParams: { method: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ method: string }>;
 }
 
 const hasMethod = (method: string) => {
@@ -18,8 +20,8 @@ const hasMethod = (method: string) => {
 };
 
 const StoreMenuPage = async ({ params, searchParams }: StoreMenuProps) => {
-  const { slug } = params;
-  const { method } = searchParams;
+  const { slug } = await params;
+  const { method } = await searchParams;
 
   if (!hasMethod(method)) {
     return notFound;
