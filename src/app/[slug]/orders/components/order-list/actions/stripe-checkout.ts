@@ -14,7 +14,9 @@ interface CheckoutItem {
 
 export async function createStripeCheckoutSession(
   items: CheckoutItem[],
-  sellerAccountId: string
+  sellerAccountId: string,
+  slug: string,
+  cpf: string
 ): Promise<string | null> {
   try {
     const lineItems = items.map((item) => ({
@@ -35,7 +37,7 @@ export async function createStripeCheckoutSession(
         line_items: lineItems,
         mode: "payment",
         success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${slug}/orders?cpf=${cpf}`,
         // Adicionar outras configurações como metadata, customer_email, etc.
       },
       {

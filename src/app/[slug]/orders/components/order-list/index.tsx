@@ -15,11 +15,8 @@ import { Separator } from "@radix-ui/react-separator";
 import { Button } from "../../../../../components/ui/button";
 import { Card, CardContent } from "../../../../../components/ui/card";
 
-// Components
-import CheckoutButton from "./components/checkout-button";
-
-// Hooks
-import { useEffect, useState } from "react";
+// Server Actions
+import { createStripeCheckoutSession } from "./actions/stripe-checkout"; // <--- Importe sua Server Action aqui
 
 // Helpers
 import { formatCurrency } from "../../../../../helpers/format-currency";
@@ -52,20 +49,44 @@ const OrderList = ({ orders }: OrderListProps) => {
   const params = useParams();
 
   const slug = params.slug as string;
-
-  const [method, setMethod] = useState<string | null>(null);
-
-  useEffect(() => {
-    const storedMethod = localStorage.getItem("method");
-    setMethod(storedMethod);
-  }, []);
+  const method = params.method as string;
+  const cpf = params.cpf as string;
 
   const handleBackClick = () => {
     router.replace(`/${slug}/menu?method=${method}`);
   };
 
+  const handleCheckoutClick = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    orderItems: Array<{ name: string; price_cents: number; quantity: number }>,
+    sellerAccountId: string
+  ) => {
+    e.preventDefault(); // Previne o comportamento padrão do botão
+
+    console.log("Iniciando o checkout com os itens:", orderItems);
+    console.log("Seller Account ID:", sellerAccountId);
+
+    try {
+      const checkoutUrl = await createStripeCheckoutSession(
+        orderItems,
+        sellerAccountId,
+        cpf,
+        slug
+      );
+
+      if (checkoutUrl) {
+        console.log("URL de checkout recebida:", checkoutUrl);
+        window.location.href = checkoutUrl;
+      } else {
+        console.error("URL de checkout não recebida.");
+      }
+    } catch (error) {
+      console.error("Erro ao iniciar o checkout:", error);
+    }
+  };
+
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-2 p-6">
       <Button
         size="icon"
         variant="secondary"
@@ -80,23 +101,18 @@ const OrderList = ({ orders }: OrderListProps) => {
         <h2 className="text-lg font-semibold">Meus Pedidos</h2>
       </div>
 
-      {orders.map((order) => (
-        <CheckoutButton
-          key={order.id}
-          items={order.orderProducts.map((op) => ({
-            name: op.product.name,
-            price_cents: op.product.price * 100,
-            quantity: op.quantity,
-          }))}
-          sellerAccountId={order?.store?.stripeAccountId ?? ""}
-          status={order.status}
-        >
-          <Card className="border-none w-full h-full">
+      {orders.map((order) => {
+        // Lógica para desabilitar o botão deve estar DENTRO do map
+        const isCheckoutFinished =
+          order.status === "FINISHED" || order.status === "PAYMENT_CONFIRMED";
+
+        return (
+          <Card key={order.id} className="border-none w-full h-full">
             <CardContent className="space-y-5 p-5">
               <div
-                className={`w-fit rounded-full px-2 py-1 text-xs font-semibold 
-                ${getStyleClassTag(order.status)}
-              `}
+                className={`w-fit rounded-full px-2 py-1 text-xs font-semibold
+                  ${getStyleClassTag(order.status)}
+                `}
               >
                 {getStatusTextTag(order.status)}
               </div>
@@ -130,9 +146,27 @@ const OrderList = ({ orders }: OrderListProps) => {
                 {formatCurrency(order.total)}
               </p>
             </CardContent>
+            <Button
+              className={`h-full w-full bg-transparent text-center hover:cursor-pointer`}
+              onClick={(e) =>
+                handleCheckoutClick(
+                  e,
+                  order.orderProducts.map((op) => ({
+                    name: op.product.name,
+                    price_cents: op.product.price * 100,
+                    quantity: op.quantity,
+                  })),
+                  order?.store?.stripeAccountId ?? ""
+                )
+              }
+              variant="ghost"
+              disabled={isCheckoutFinished}
+            >
+              Finalizar pedido
+            </Button>
           </Card>
-        </CheckoutButton>
-      ))}
+        );
+      })}
     </div>
   );
 };
