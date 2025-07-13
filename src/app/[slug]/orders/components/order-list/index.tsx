@@ -18,11 +18,13 @@ import { Card, CardContent } from "../../../../../components/ui/card";
 // Components
 import CheckoutButton from "./components/checkout-button";
 
+// Hooks
+import { useEffect, useState } from "react";
+
 // Helpers
 import { formatCurrency } from "../../../../../helpers/format-currency";
 import { getStatusTextTag } from "../../../../../helpers/getStatusTextTag";
 import { getStyleClassTag } from "@/src/helpers/getStyleClassTag";
-import { useEffect, useState } from "react";
 
 interface OrderListProps {
   orders: Array<
@@ -86,7 +88,7 @@ const OrderList = ({ orders }: OrderListProps) => {
             price_cents: op.product.price * 100,
             quantity: op.quantity,
           }))}
-          sellerAccountId={order?.store?.stripeAccountId}
+          sellerAccountId={order?.store?.stripeAccountId ?? ""}
           status={order.status}
         >
           <Card className="border-none w-full h-full">
