@@ -15,8 +15,8 @@ interface CheckoutItem {
 export async function createStripeCheckoutSession(
   items: CheckoutItem[],
   sellerAccountId: string,
-  slug: string,
-  cpf: string
+  cpf: string,
+  slug: string
 ): Promise<string | null> {
   try {
     const lineItems = items.map((item) => ({

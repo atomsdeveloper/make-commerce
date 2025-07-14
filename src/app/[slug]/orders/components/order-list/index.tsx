@@ -8,7 +8,7 @@ import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 
 // Next
 import Image from "next/image";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 
 // Components UI
 import { Separator } from "@radix-ui/react-separator";
@@ -47,10 +47,12 @@ interface OrderListProps {
 const OrderList = ({ orders }: OrderListProps) => {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams(); // Para capturar parâmetros de query string
 
+  // Obter 'method' e 'cpf' da query string
+  const method = searchParams.get("method") || "";
+  const cpf = searchParams.get("cpf") || "";
   const slug = params.slug as string;
-  const method = params.method as string;
-  const cpf = params.cpf as string;
 
   const handleBackClick = () => {
     router.replace(`/${slug}/menu?method=${method}`);
