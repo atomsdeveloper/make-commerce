@@ -8,7 +8,7 @@ import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 
 // Next
 import Image from "next/image";
-import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 // Components UI
 import { Separator } from "@radix-ui/react-separator";
@@ -47,15 +47,12 @@ interface OrderListProps {
 const OrderList = ({ orders }: OrderListProps) => {
   const router = useRouter();
   const params = useParams();
-  const searchParams = useSearchParams(); // Para capturar parâmetros de query string
 
-  // Obter 'method' e 'cpf' da query string
-  const method = searchParams.get("method") || "";
-  const cpf = searchParams.get("cpf") || "";
   const slug = params.slug as string;
 
   const handleBackClick = () => {
-    router.replace(`/${slug}/menu?method=${method}`);
+    const currentMethod = localStorage.getItem("method");
+    router.replace(`/${slug}/menu?method=${currentMethod}`);
   };
 
   const handleCheckoutClick = async (
@@ -63,16 +60,12 @@ const OrderList = ({ orders }: OrderListProps) => {
     orderItems: Array<{ name: string; price_cents: number; quantity: number }>,
     sellerAccountId: string
   ) => {
-    e.preventDefault(); // Previne o comportamento padrão do botão
-
-    console.log("Iniciando o checkout com os itens:", orderItems);
-    console.log("Seller Account ID:", sellerAccountId);
+    e.preventDefault();
 
     try {
       const checkoutUrl = await createStripeCheckoutSession(
         orderItems,
         sellerAccountId,
-        cpf,
         slug
       );
 
@@ -94,6 +87,7 @@ const OrderList = ({ orders }: OrderListProps) => {
         variant="secondary"
         className="rounded-full"
         onClick={handleBackClick}
+        disabled={false}
       >
         <ChevronLeftIcon />
       </Button>
@@ -104,7 +98,6 @@ const OrderList = ({ orders }: OrderListProps) => {
       </div>
 
       {orders.map((order) => {
-        // Lógica para desabilitar o botão deve estar DENTRO do map
         const isCheckoutFinished =
           order.status === "FINISHED" || order.status === "PAYMENT_CONFIRMED";
 
