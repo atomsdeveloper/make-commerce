@@ -70,7 +70,6 @@ const OrderList = ({ orders }: OrderListProps) => {
       );
 
       if (checkoutUrl) {
-        console.log("URL de checkout recebida:", checkoutUrl);
         window.location.href = checkoutUrl;
       } else {
         console.error("URL de checkout não recebida.");
