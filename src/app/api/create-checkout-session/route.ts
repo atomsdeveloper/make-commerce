@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       }),
     },
     success_url: `${req.headers.get("origin")}/checkout-return?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${req.headers.get("origin")}/software-company/orders?cancel=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${items[0].slug}/orders`,
   });
   return NextResponse.json({ url: session.url });
 }
