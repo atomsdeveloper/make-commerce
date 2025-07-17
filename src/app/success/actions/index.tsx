@@ -1,7 +1,10 @@
-// app/success/actions.ts
-"use server"; // Indica que este é um arquivo de Server Actions
+"use server";
 
+// Stripe
 import Stripe from "stripe";
+
+// Database
+import { db } from "../../../lib/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2025-05-28.basil", // Use a sua versão de API, se for diferente
@@ -23,18 +26,38 @@ export async function getStripeCheckoutSession(
     return null;
   }
 }
+
 /**
  * Atualiza o status de um pedido no banco de dados.
  * @param sessionId O ID da sessão de checkout do Stripe.
  * @param status O novo status do pedido.
  */
-export async function updateOrderStatus(sessionId: string, status: string) {
+
+// Define Order exported from prisma
+import { OrderStatus } from "@prisma/client";
+
+export async function updateOrderStatusBySession(
+  sessionId: string,
+  status: OrderStatus
+) {
   try {
-    // Lógica para atualizar o status do pedido no banco de dados
-    console.log(sessionId, status);
-    // Exemplo: await prisma.order.update({ where: { sessionId }, data: { status } });
+    await db.order.update({
+      where: {
+        stripeSessionId: sessionId,
+      },
+      data: {
+        status,
+        updateAt: new Date(),
+      },
+    });
+
+    console.log(`Pedido ${sessionId} atualizado para o status: ${status}`);
   } catch (error) {
-    console.error("Erro ao atualizar status do pedido:", error);
+    console.error(`Erro ao atualizar status do pedido ${sessionId}:`, error);
+
+    throw new Error("Falha ao atualizar o status do pedido.");
+  } finally {
+    await db.$disconnect();
   }
 }
 /**

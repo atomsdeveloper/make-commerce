@@ -4,7 +4,7 @@
 import React, { useEffect } from "react";
 
 // Next
-import { useRouter } from "next/navigation"; // Se precisar navegar
+import { useRouter } from "next/navigation";
 
 // Components UI
 import { Button } from "@/src/components/ui/button";
@@ -13,13 +13,14 @@ interface SuccessClientComponentProps {
   sessionId: string;
   customerEmail: string;
   amountTotal: number;
-  // ... outras props serializáveis
+  slug: string;
 }
 
 export default function SuccessClientComponent({
   sessionId,
   customerEmail,
   amountTotal,
+  slug,
 }: SuccessClientComponentProps) {
   const router = useRouter();
 
@@ -29,8 +30,9 @@ export default function SuccessClientComponent({
     console.log("compoennte montado com sucesso", sessionId);
   }, [sessionId]);
 
-  const handleGoHome = () => {
-    router.push(`${process.env.NEXT_PUBLIC_APP_URL}`); // Redireciona para a página inicial ou outra página desejada
+  const handleGoToCart = () => {
+    // Replace 'your-slug' with the actual slug value or pass it as a prop
+    router.replace(`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}/orders`);
   };
 
   return (
@@ -53,10 +55,10 @@ export default function SuccessClientComponent({
         </span>
       </p>
       <Button
-        onClick={handleGoHome}
+        onClick={handleGoToCart}
         className="mt-6 px-6 py-3 text-white rounded-md transition-colors"
       >
-        Voltar para o Início
+        Voltar para o carrinho
       </Button>
     </div>
   );

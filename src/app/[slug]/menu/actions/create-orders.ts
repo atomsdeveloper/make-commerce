@@ -11,6 +11,13 @@ import { Method } from "@prisma/client";
 // Helpers
 import { removeCpfPunctuation } from "../../../../helpers/cpf";
 
+// Stripe
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-05-28.basil",
+});
+
 interface CreateOrderInputProps {
   customerName: string;
   customerCpf: string;
@@ -63,6 +70,26 @@ export const createOrder = async (input: CreateOrderInputProps) => {
     throw new Error("Nenhum produto válido foi enviado para o pedido.");
   }
 
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+    line_items: productsWithPrice.map((item) => ({
+      price_data: {
+        currency: "BRL",
+        product_data: {
+          name: item.name,
+        },
+        unit_amount: item.price * 100, // em centavos
+      },
+      quantity:
+        productsWithPriceAndQuantities.find(
+          (product) => product.productId === item.id
+        )?.quantity || 1,
+    })),
+  });
+
   await db.order.create({
     data: {
       status: "PENDING",
@@ -87,10 +114,9 @@ export const createOrder = async (input: CreateOrderInputProps) => {
       store: {
         connect: { id: store.id },
       },
+      stripeSessionId: session.id,
     },
   });
   revalidatePath(`/${input.slug}/orders`); // Limpa cache antes de redirecionar á página.
-  redirect(
-    `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`
-  );
+  redirect(session.url!);
 };
