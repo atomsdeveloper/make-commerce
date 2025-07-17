@@ -1,8 +1,13 @@
-// app/success/SuccessClientComponent.tsx (Client Component)
 "use client";
 
+// React
 import React, { useEffect } from "react";
+
+// Next
 import { useRouter } from "next/navigation"; // Se precisar navegar
+
+// Components UI
+import { Button } from "@/src/components/ui/button";
 
 interface SuccessClientComponentProps {
   sessionId: string;
@@ -21,6 +26,7 @@ export default function SuccessClientComponent({
   useEffect(() => {
     // Você pode ter alguma lógica de efeito colateral aqui,
     // como enviar eventos de analytics ou limpar o carrinho de compras no cliente.
+    console.log("compoennte montado com sucesso", sessionId);
   }, [sessionId]);
 
   const handleGoHome = () => {
@@ -34,7 +40,8 @@ export default function SuccessClientComponent({
       </h1>
       <p className="text-lg text-gray-700 mb-2">Obrigado pela sua compra!</p>
       <p className="text-md text-gray-600 mb-1">
-        ID da Sessão: <span className="font-semibold">{sessionId}</span>
+        Um e-mail para o endereço abaixo será enviado para você com os detalhes
+        do pedido.
       </p>
       <p className="text-md text-gray-600 mb-1">
         Email: <span className="font-semibold">{customerEmail}</span>
@@ -45,12 +52,12 @@ export default function SuccessClientComponent({
           R$ {amountTotal.toFixed(2).replace(".", ",")}
         </span>
       </p>
-      <button
+      <Button
         onClick={handleGoHome}
-        className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        className="mt-6 px-6 py-3 text-white rounded-md transition-colors"
       >
         Voltar para o Início
-      </button>
+      </Button>
     </div>
   );
 }
