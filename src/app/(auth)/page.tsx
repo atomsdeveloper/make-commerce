@@ -3,33 +3,27 @@
 // React
 import { useEffect } from "react";
 
-// Icons
-import { LogInIcon } from "lucide-react";
-
-// Next Router
+// Next
 import { useRouter } from "next/navigation";
 
-// User Clerk
-import { SignInButton, useUser } from "@clerk/nextjs";
-
-// Components
-import { Button } from "../../components/ui/button";
+// UI Shadcn
 import {
   Card,
-  CardAction,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
-import Form from "./components/form";
+
+// Clerk
+import { useUser } from "@clerk/nextjs";
+
+// Components
+import FormSingIn from "./components/form";
 
 const LoginPage = () => {
   const { isSignedIn } = useUser();
   const router = useRouter();
 
-  // Se o usuário já estiver logado, redireciona pra home
   useEffect(() => {
     if (isSignedIn) {
       router.replace("/software-company");
@@ -38,37 +32,19 @@ const LoginPage = () => {
 
   return (
     <div className="flex h-full justify-center items-center">
-      <Card className="h-[400px] max-w-sm">
+      <Card
+        role="group"
+        aria-label="Formulário de cadastro"
+        className="h-[450px] max-w-[350px] flex justify-between flex-1"
+      >
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
+          <CardDescription className="text-xs">
+            Enter your email and password below to login to your account
           </CardDescription>
-          <CardAction>
-            <Button variant="outline">Sign Up</Button>
-          </CardAction>
         </CardHeader>
 
-        <CardContent>
-          <Form />
-        </CardContent>
-
-        <CardFooter className="flex-col gap-2">
-          <Button
-            type="submit"
-            variant="outline"
-            className="w-full bg-stone-950 text-stone-100"
-          >
-            Login
-          </Button>
-
-          <SignInButton>
-            <Button variant="outline" className="w-full">
-              <LogInIcon className="mr-2" />
-              Login with Provider
-            </Button>
-          </SignInButton>
-        </CardFooter>
+        <FormSingIn />
       </Card>
     </div>
   );

@@ -8,10 +8,9 @@ import { auth } from "@clerk/nextjs/server";
 // Data
 import { getStoreBySlug } from "../../data/get-store-by-slug";
 
-// Component
+// Components
 import Method from "./components/method";
 
-// Tudo dentro de app/ no next é uma rota. É preciso usar um promise para recuperar a o valor da url que neste caso é o slug.
 interface StoreSlugProps {
   params: Promise<{ slug: string }>;
 }
