@@ -13,9 +13,9 @@ import { LogInIcon } from "lucide-react";
 // Next
 import Link from "next/link";
 
-export default function FormSignIn() {
+export default function Form() {
   return (
-    <form className="flex flex-col justify-around h-full">
+    <form role="form" className="flex flex-col justify-around h-full">
       <CardContent className="h-full flex flex-col mt-1">
         <div className="flex flex-col gap-6">
           {/* TODO: Separate component of input and label, both are equals. */}
@@ -58,22 +58,20 @@ export default function FormSignIn() {
         <Button
           type="submit"
           variant="outline"
-          className="w-full bg-stone-950 text-stone-100 mt-2 mb-2"
+          className="w-full bg-stone-950 text-stone-100 mt-2 mb-2 text-sm"
           aria-label="Clique para enviar os dados e entrar na plataforma."
         >
           Login
         </Button>
 
         <SignInButton>
-          <Button
-            variant="outline"
-            className="w-full mt-2 mb-2"
-            type="button"
+          <div
+            className="w-full mt-2 mb-2 flex items-center text-sm justify-center border rounded-md px-4 py-2 hover:bg-gray-100"
             aria-label="Clique para entrar com a conta do google."
           >
-            <LogInIcon className="mr-2" />
+            <LogInIcon className="mr-2" size={16} />
             Login with Google
-          </Button>
+          </div>
         </SignInButton>
 
         <Link

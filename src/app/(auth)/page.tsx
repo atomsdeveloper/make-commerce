@@ -12,13 +12,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/src/components/ui/card";
+} from "../../../src/components/ui/card";
 
 // Clerk
 import { useUser } from "@clerk/nextjs";
 
 // Components
-import FormSingIn from "./components/form";
+import Form from "./components/form";
 
 export default function LoginPage() {
   const { isSignedIn } = useUser();
@@ -44,7 +44,7 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
 
-        <FormSingIn />
+        <Form />
       </Card>
     </div>
   );
