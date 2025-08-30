@@ -1,8 +1,8 @@
 // UI Shadcn
-import { CardContent, CardFooter } from "@/src/components/ui/card";
+import { CardContent, CardFooter } from "../../../../components/ui/card";
 import { Input } from "../../../../components/ui/input";
 import { Label } from "../../../../components/ui/label";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "../../../../components/ui/button";
 
 // Clerk
 import { SignInButton } from "@clerk/nextjs";
@@ -13,9 +13,9 @@ import { LogInIcon } from "lucide-react";
 // Next
 import Link from "next/link";
 
-const FormSignIn = () => {
+export default function FormSignIn() {
   return (
-    <form action="" className="flex flex-col justify-around h-full">
+    <form className="flex flex-col justify-around h-full">
       <CardContent className="h-full flex flex-col mt-1">
         <div className="flex flex-col gap-6">
           {/* TODO: Separate component of input and label, both are equals. */}
@@ -87,6 +87,4 @@ const FormSignIn = () => {
       </CardFooter>
     </form>
   );
-};
-
-export default FormSignIn;
+}

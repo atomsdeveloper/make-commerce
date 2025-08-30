@@ -20,7 +20,7 @@ import { useUser } from "@clerk/nextjs";
 // Components
 import FormSingIn from "./components/form";
 
-const LoginPage = () => {
+export default function LoginPage() {
   const { isSignedIn } = useUser();
   const router = useRouter();
 
@@ -48,6 +48,4 @@ const LoginPage = () => {
       </Card>
     </div>
   );
-};
-
-export default LoginPage;
+}
