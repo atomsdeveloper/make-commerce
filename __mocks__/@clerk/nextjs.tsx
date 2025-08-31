@@ -6,8 +6,10 @@ export const useUser = () => ({
   user: null,
 });
 
-export const SignInButton = ({ children }: { children: React.ReactNode }) => (
-  <button data-testid="mock-signin-button">{children}</button>
+export const SignInButton = jest.fn(
+  ({ children }: { children: React.ReactNode }) => (
+    <button data-testid="mock-signin-button">{children}</button>
+  ),
 );
 
 export const ClerkProvider = ({ children }: { children: React.ReactNode }) => (
