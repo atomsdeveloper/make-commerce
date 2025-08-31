@@ -5,31 +5,50 @@ import { render, screen } from "@testing-library/react";
 import Form from "./index";
 
 describe("Form", () => {
-  it("renderiza campos de email e senha", () => {
+  // Form Role
+  it("Should be render a role form intro component", () => {
     render(<Form />);
 
-    expect(screen.getByLabelText(/dígite seu e-mail/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/dígite sua senha/i)).toBeInTheDocument();
+    const formElement = screen.getByRole("form");
+    expect(formElement).toBeInTheDocument();
   });
 
-  it("renderiza botão de login", () => {
-    render(<Form />);
-
-    expect(screen.getAllByText(/login$/i)).toHaveLength(1);
+  // Form Element
+  it("Should be render a form element on component", () => {
+    const { container } = render(<Form />);
+    const formElement = container.querySelector("form");
+    expect(formElement).toBeInTheDocument();
   });
 
-  it("renderiza botão de login com Google mockado", () => {
+  // Fields Inputs
+  it("Should be render fields inputs for email and password", () => {
+    render(<Form />);
+    expect(screen.getByLabelText(/e-mail/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
+  });
+
+  // Button Sign In
+  it("Should be render a button element to Sign In", () => {
     render(<Form />);
 
-    const googleButton = screen.getByTestId("mock-signin-button");
+    const signInButton = screen.getByTestId("button-element-signin");
+
+    expect(signInButton).toBeInTheDocument();
+  });
+
+  // Button Google
+  it("Should be render a button element to Sign In with Google", () => {
+    render(<Form />);
+
+    const googleButton = screen.getByText(/Entrar com o Google/i);
     expect(googleButton).toBeInTheDocument();
-    expect(screen.getByText(/login with google/i)).toBeInTheDocument();
   });
 
-  it("renderiza link de cadastro", () => {
+  // Link Sign Up
+  it("Should be render a link for sign up", () => {
     render(<Form />);
     expect(
-      screen.getByRole("link", { name: /quero cadastrar uma conta grátis/i }),
+      screen.getByRole("link", { name: /Quero cadastrar uma conta grátis!/i }),
     ).toBeInTheDocument();
   });
 });
