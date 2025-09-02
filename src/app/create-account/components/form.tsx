@@ -1,11 +1,8 @@
 "use client";
 
-// React Hook Form Plus Zod
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 // UI Shadcn
+import { CardContent, CardFooter } from "../../../components/ui/card";
+import { Input } from "@/src/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Form as FormShadcn,
@@ -15,29 +12,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/src/components/ui/input";
-import { CardContent, CardFooter } from "@/src/components/ui/card";
+} from "@/src/components/ui/form";
 
-// Next
-import { useRouter } from "next/navigation";
-
-// Actions
-import { GetDataSignIn, loginAction } from "../../../../actions/signIn";
+// Toastify
+import { toast } from "react-toastify";
 
 // React
 import { useActionState, useEffect } from "react";
 
-// Toast
-import { toast } from "react-toastify";
+// Action
+import { GetDataAccount, account } from "@/src/actions/account";
 
-// Clerk
-import { SignInButton } from "@clerk/nextjs";
+// Next
+import Link from "next/link";
 
-// Icons
-import { Link, LogInIcon } from "lucide-react";
+// React Hook Form Plus Zod
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "O nome deve ter no mínimo 2 caracteres.",
+  }),
   email: z.string().email({
     message: "Digite um e-mail válido.",
   }),
@@ -46,19 +43,19 @@ const formSchema = z.object({
   }),
 });
 
-export default function FormSignIn() {
+export default function FormCreateUser() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  const router = useRouter();
-
-  const initialState: GetDataSignIn = {
+  const initialState: GetDataAccount = {
     formState: {
+      name: "",
       email: "",
       password: "",
     },
@@ -66,7 +63,7 @@ export default function FormSignIn() {
     success: false,
   };
 
-  const [state, action, isPending] = useActionState(loginAction, initialState);
+  const [state, action, isPending] = useActionState(account, initialState);
 
   const { formState, errors = [], success = false } = state ?? initialState;
 
@@ -83,11 +80,8 @@ export default function FormSignIn() {
     if (success) {
       toast.dismiss();
       toast.success("Login realizado com sucesso!");
-
-      const url = new URL(window.location.href);
-      router.replace(url.toString());
     }
-  }, [success, router]);
+  }, [success]);
 
   // TODO: Move function to utils because it is used to convert data for FormData type.
   // Convert data receive form shadcn for data form.
@@ -95,6 +89,7 @@ export default function FormSignIn() {
     data: z.infer<typeof formSchema>,
   ) => {
     const formData = new FormData();
+    formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("password", data.password);
 
@@ -110,6 +105,32 @@ export default function FormSignIn() {
           role="form"
         >
           <CardContent>
+            {/* Name */}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Seu nome"
+                      type="text"
+                      {...field}
+                      value={formState.name}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        formState.name = e.target.value;
+                      }}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormDescription>Digite seu nome completo.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Email */}
             <FormField
               control={form.control}
@@ -165,35 +186,25 @@ export default function FormSignIn() {
             />
           </CardContent>
 
-          <CardFooter className="flex flex-col  justify-between">
+          <CardFooter>
             <Button
               data-testid="button-element-signin"
               type="submit"
               variant="outline"
               className="w-full bg-stone-950 text-stone-100 mt-2 mb-2 text-sm"
               aria-label="Clique para enviar os dados e entrar na plataforma."
-              disabled={isPending}
+              // disabled={isPending}
             >
-              Entrar
+              Salvar
             </Button>
 
-            <SignInButton>
-              <div
-                className="w-full mt-2 mb-2 flex items-center text-sm justify-center border rounded-md px-4 py-2 hover:bg-gray-100"
-                aria-label="Entrar com o Google."
-              >
-                <LogInIcon className="mr-2" size={16} />
-                Entrar com o Google
-              </div>
-            </SignInButton>
-
             <Link
-              href="/create-user"
+              href="/"
               aria-label="Quero cadastrar uma conta grátis."
               className="mt-2 mb-2 text-xs underline italic cursor-pointer hover:text-slate-800"
-              aria-disabled={isPending}
+              // aria-disabled={isPending}
             >
-              Quero cadastrar uma conta grátis!
+              Voltar para a tela de login!
             </Link>
           </CardFooter>
         </form>
