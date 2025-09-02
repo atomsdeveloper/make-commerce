@@ -1,9 +1,9 @@
 {
   "window.zoomLevel": 0,
   "breadcrumbs.enabled": true,
-  "editor.fontSize": 11.3,
-  "debug.console.fontSize": 11.3,
-  "terminal.integrated.fontSize": 11.3,
+  "editor.fontSize": 11,
+  "debug.console.fontSize": 11,
+  "terminal.integrated.fontSize": 11,
   "editor.glyphMargin": false,
   "workbench.activityBar.location": "default",
   "editor.lineNumbers": "on",
@@ -11,5 +11,7 @@
   "workbench.editor.labelFormat": "short",
   "editor.tabSize": 2,
   "explorer.compactFolders": false,
-  "workbench.editor.enablePreview": false
+  "workbench.editor.enablePreview": false,
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 80
 }
