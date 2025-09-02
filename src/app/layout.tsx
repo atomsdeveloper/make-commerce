@@ -18,8 +18,12 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
+// Context
 import { CartProvider } from "../app/[slug]/menu/context/cart";
 import { MethodProvider } from "./[slug]/context/MethodContext";
+
+// Toastfy
+import { ToastContainer } from "react-toastify";
 
 export default function RootLayout({
   children,
@@ -41,6 +45,7 @@ export default function RootLayout({
             </ClerkProvider>
           </MethodProvider>
         </CartProvider>
+        <ToastContainer />
       </body>
     </html>
   );
