@@ -30,15 +30,6 @@ jest.mock("next/navigation", () => ({
 }));
 
 // Mock loginAction
-export const loginAction = jest.fn(async (data: FormData) => {
-  return { success: true, ...data };
-});
-
-jest.mock("./src/app/(auth)/page", () => {
-  const originalModule = jest.requireActual("./src/app/(auth)/page");
-  return {
-    __esModule: true,
-    ...originalModule,
-    loginAction, // sobrescreve o export real com o mock
-  };
-});
+jest.mock("./src/actions/loginAction", () => ({
+  loginAction: jest.fn(),
+}));

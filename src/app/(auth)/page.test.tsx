@@ -1,11 +1,11 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 // Component Test
 import LoginPage from "./page";
 
 // Mock
 import { SignInButton } from "@/__mocks__/@clerk/nextjs";
-import { loginAction } from "../../../jest.setup";
+import { loginAction } from "@/src/actions/signIn";
 
 describe("SignIn Include Form", () => {
   // Form Role
@@ -31,15 +31,7 @@ describe("SignIn Include Form", () => {
   });
 
   // Button Sign In
-  // TODO: Fix test
-  it("Should be render a button element with call action on submit form", () => {
-    (loginAction as jest.Mock).mockImplementation((formData: FormData) => {
-      return {
-        email: formData.get("email"),
-        password: formData.get("password"),
-      };
-    });
-
+  it("Should be render a button element with call action on submit form", async () => {
     render(<LoginPage />);
 
     const emailInput = screen.getByLabelText(/e-mail/i);
@@ -54,14 +46,22 @@ describe("SignIn Include Form", () => {
       target: { value: "password" },
     });
 
+    const email = "test@example.com";
+    const password = "password";
+
     expect(signInButton).toBeInTheDocument();
 
     const form = screen.getByRole("form");
     fireEvent.submit(form);
 
-    expect(loginAction).toHaveBeenCalledWith({
-      email: true,
-      password: true,
+    await waitFor(() => {
+      expect(loginAction).toHaveBeenCalled();
+
+      const [prevState, formData] = (loginAction as jest.Mock).mock.calls[0];
+
+      expect(prevState.success).toBe(true);
+      expect(formData.get("email")).toBe(email);
+      expect(formData.get("password")).toBe(password);
     });
   });
 
