@@ -9,7 +9,8 @@ export const IMAGE_UPLOAD_DIRECTORY_VARIABLE =
 export const IMAGE_SERVER_DOMAIN_VARIABLE =
   process.env.IMAGE_SERVER_DOMAIN?.toString() || "";
 
-export const JWT_SECRET_KEY_VARIABLE = process.env.JWT_SECRET_KEY || "";
+export const JWT_SECRET_KEY_VARIABLE =
+  process.env.JWT_SECRET_KEY || "Error generate Key";
 
 // Js use mileseconds, so should be multiply per 1000 for get minutes.
 export const LOGIN_EXPIRATION_MINUTES_VARIABLE =
@@ -20,3 +21,9 @@ export const LOGIN_EXPIRATION_STRING_VARIABLE =
 
 export const LOGIN_COOKIE_NAME_VARIABLE =
   process.env.LOGIN_COOKIE_NAME || "LOGIN_SESSION";
+
+export const NEXT_PUBLIC_APP_URL_VARIABLE =
+  process.env.NEXT_PUBLIC_APP_URL || "localhost";
+
+export const NEXT_PUBLIC_BASE_URL_VARIABLE =
+  process.env.NEXT_PUBLIC_BASE_URL || "localhost";

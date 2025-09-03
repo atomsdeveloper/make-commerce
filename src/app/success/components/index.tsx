@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 // Components UI
 import { Button } from "@/src/components/ui/button";
 
+// Constants
+import { NEXT_PUBLIC_BASE_URL_VARIABLE } from "@/src/utils/constants";
+
 interface SuccessClientComponentProps {
   sessionId: string;
   customerEmail: string;
@@ -32,7 +35,7 @@ export default function SuccessClientComponent({
 
   const handleGoToCart = () => {
     // Replace 'your-slug' with the actual slug value or pass it as a prop
-    router.replace(`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}/orders`);
+    router.replace(`${NEXT_PUBLIC_BASE_URL_VARIABLE}/${slug}/orders`);
   };
 
   return (

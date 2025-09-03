@@ -4,6 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 // Stripe
 import stripe from "../../../config/stripe";
 
+// Constants
+import { NEXT_PUBLIC_BASE_URL_VARIABLE } from "@/src/utils/constants";
+
 type CheckoutItem = {
   name: string;
   price: number;
@@ -35,7 +38,7 @@ export async function POST(req: NextRequest) {
       }),
     },
     success_url: `${req.headers.get("origin")}/checkout-return?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${items[0].slug}/orders`,
+    cancel_url: `${NEXT_PUBLIC_BASE_URL_VARIABLE}/${items[0].slug}/orders`,
   });
   return NextResponse.json({ url: session.url });
 }

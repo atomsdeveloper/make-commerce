@@ -8,13 +8,13 @@ import Stripe from "stripe";
 import { db } from "../../../../lib/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-05-28.basil",
+  apiVersion: "2025-08-27.basil",
   typescript: true,
 });
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { email, storeId } = req.body;
   const account = await stripe.accounts.create({ type: "express", email });

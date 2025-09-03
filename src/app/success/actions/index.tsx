@@ -7,7 +7,7 @@ import Stripe from "stripe";
 import { db } from "../../../lib/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-05-28.basil", // Use a sua versão de API, se for diferente
+  apiVersion: "2025-08-27.basil", // Use a sua versão de API, se for diferente
 });
 
 /**
@@ -16,7 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
  * @returns Um objeto Session do Stripe ou null em caso de erro.
  */
 export async function getStripeCheckoutSession(
-  sessionId: string
+  sessionId: string,
 ): Promise<Stripe.Checkout.Session | null> {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -38,7 +38,7 @@ import { OrderStatus } from "@prisma/client";
 
 export async function updateOrderStatusBySession(
   sessionId: string,
-  status: OrderStatus
+  status: OrderStatus,
 ) {
   try {
     await db.order.update({
