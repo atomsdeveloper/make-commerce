@@ -62,7 +62,7 @@ export const signIn = async (
   }
 
   // Check if password is valid
-  const hasPassHash = await checkPassword(password, "base64");
+  const hasPassHash = await checkPassword(password, user.password!);
 
   // Check pass user is valid
   if (!hasPassHash) {
@@ -78,5 +78,8 @@ export const signIn = async (
 
   await createLoginSession(email);
 
-  redirect("/software-company");
+  const redirectTo = (formData.get("from") as string) || "/";
+  const cpf = formData.get("cpf") as string;
+
+  redirect(`${redirectTo}?cpf=${encodeURIComponent(cpf)}`);
 };

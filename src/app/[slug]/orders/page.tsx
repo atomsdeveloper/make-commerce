@@ -25,6 +25,7 @@ const OrdersPage = async ({ searchParams }: OrderPageProps) => {
     return <CpfForm />;
   }
 
+  // TODO: Move to design pattern Repository
   const orders = await db.order.findMany({
     orderBy: {
       createdAt: "desc",
