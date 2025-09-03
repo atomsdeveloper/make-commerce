@@ -222,7 +222,7 @@ export default function Form({
             )}
 
             <Link
-              href={mode === "signin" ? "/create-account" : "/"}
+              href={mode === "signin" ? "/auth/create" : "/auth/enter"}
               aria-label="Quero cadastrar uma conta grátis."
               className="mt-2 mb-2 text-xs underline italic cursor-pointer hover:text-slate-800"
               aria-disabled={isPending}
