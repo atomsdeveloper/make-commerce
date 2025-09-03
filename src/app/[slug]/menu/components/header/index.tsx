@@ -19,7 +19,9 @@ interface StoreHeaderProps {
 
 const StoreHeader = ({ store }: StoreHeaderProps) => {
   const router = useRouter();
-  const { slug } = useParams<{ slug: string }>();
+  const params = useParams();
+
+  const slug = params.slug as string;
 
   const handleBackClick = () => router.back();
 

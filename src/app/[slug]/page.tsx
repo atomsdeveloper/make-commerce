@@ -3,16 +3,23 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 // Data
-import { getStoreBySlug } from "../../data/get-store-by-slug";
+import { getStoreBySlug } from "../../data/get-store";
 
 // Components
 import Method from "./components/method";
 
-const StorePage = async () => {
-  const store = await getStoreBySlug("software-company");
+interface StorePageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
+const StorePage = async ({ params }: StorePageProps) => {
+  const { slug } = await params;
+  const store = await getStoreBySlug(slug);
 
   if (!store) {
-    return notFound;
+    notFound();
   }
 
   return (
@@ -35,14 +42,14 @@ const StorePage = async () => {
       </div>
       <div className="grid grid-cols-2 gap-4 pt-14">
         <Method
-          slug={store.slug}
+          slug={slug}
           option="PICKUP"
           buttonText="Para retirar"
           imageAlt="Para Retirar no Local"
           imageUrl="/take_away.png"
         />
         <Method
-          slug={store.slug}
+          slug={slug}
           option="MOTORBIKE"
           buttonText="Para entregar"
           imageAlt="Para Entregar"
@@ -52,4 +59,5 @@ const StorePage = async () => {
     </div>
   );
 };
+
 export default StorePage;

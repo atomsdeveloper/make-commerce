@@ -1,5 +1,3 @@
-"use server";
-
 // Next
 import { notFound } from "next/navigation";
 
@@ -10,21 +8,21 @@ import { db } from "../../../lib/prisma";
 import StoreCategories from "./components/categories";
 import StoreHeader from "./components/header";
 
-interface StoreMenuProps {
+interface StoreMenuPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ method: string }>;
+  searchParams: Promise<{ method?: string }>; // ⚡ searchParams é Promise
 }
 
 const hasMethod = (method: string) => {
-  return ["MOTORBIKE", "PICKUP", "MAIL"].includes(method.toUpperCase());
+  return ["MOTORBIKE", "PICKUP", "MAIL"].includes(method?.toUpperCase() || "");
 };
 
-const StoreMenuPage = async ({ params, searchParams }: StoreMenuProps) => {
+const StoreMenuPage = async ({ params, searchParams }: StoreMenuPageProps) => {
   const { slug } = await params;
   const { method } = await searchParams;
 
-  if (!hasMethod(method)) {
-    return notFound;
+  if (!method || !hasMethod(method)) {
+    return notFound();
   }
 
   const store = await db.store.findUnique({
@@ -35,8 +33,9 @@ const StoreMenuPage = async ({ params, searchParams }: StoreMenuProps) => {
       },
     },
   });
+
   if (!store) {
-    notFound();
+    return notFound();
   }
 
   return (
@@ -46,4 +45,5 @@ const StoreMenuPage = async ({ params, searchParams }: StoreMenuProps) => {
     </div>
   );
 };
+
 export default StoreMenuPage;
