@@ -50,12 +50,12 @@ export const createOrder = async (input: CreateOrderInputProps) => {
 
   const productsWithPriceAndQuantities = input.products.map((product) => {
     const matchedProduct = productsWithPrice.find(
-      (productWithPrice) => productWithPrice.id === product.id
+      (productWithPrice) => productWithPrice.id === product.id,
     );
 
     if (!matchedProduct) {
       throw new Error(
-        `Produto com ID ${product.id} não encontrado no banco de dados.`
+        `Produto com ID ${product.id} não encontrado no banco de dados.`,
       );
     }
 
@@ -85,7 +85,7 @@ export const createOrder = async (input: CreateOrderInputProps) => {
       },
       quantity:
         productsWithPriceAndQuantities.find(
-          (product) => product.productId === item.id
+          (product) => product.productId === item.id,
         )?.quantity || 1,
     })),
   });
@@ -107,7 +107,7 @@ export const createOrder = async (input: CreateOrderInputProps) => {
         productsWithPriceAndQuantities.length > 0
           ? productsWithPriceAndQuantities.reduce(
               (acc, product) => acc + product.price * product.quantity,
-              0
+              0,
             )
           : 0,
       method: input?.consumptionMethod,

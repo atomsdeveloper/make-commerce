@@ -15,7 +15,7 @@ interface CheckoutItem {
 export async function createStripeCheckoutSession(
   items: CheckoutItem[],
   sellerAccountId: string,
-  slug: string
+  slug: string,
 ): Promise<string | null> {
   try {
     const lineItems = items.map((item) => ({
@@ -41,7 +41,7 @@ export async function createStripeCheckoutSession(
       },
       {
         stripeAccount: sellerAccountId, // Conecta a sessão ao Stripe Connect Account do vendedor
-      }
+      },
     );
 
     return session.url;

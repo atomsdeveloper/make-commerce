@@ -57,7 +57,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
   const addProductCart = (productReceive: CartProduct) => {
     // Verificar se o produto já está no carrinho
     const productIsAlreadyOnTheCart = productsCart.some(
-      (productCart) => productCart.id === productReceive.id
+      (productCart) => productCart.id === productReceive.id,
     );
 
     // Se não estiver, adicionar ao carrinho
@@ -126,7 +126,7 @@ export const CartProvider = ({ children }: ChildrenProps) => {
     // Filtrando os produtos do carrinho que tiverem o id diferente do id recebido.
     // Removendo o produto. Ficando somente os produtos que não tem o id igual do produto recebido.
     setProductsCart((productsCart) =>
-      productsCart.filter((productCart) => productCart.id !== productsId)
+      productsCart.filter((productCart) => productCart.id !== productsId),
     );
   };
   return (

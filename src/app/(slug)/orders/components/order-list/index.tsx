@@ -58,7 +58,7 @@ const OrderList = ({ orders }: OrderListProps) => {
   const handleCheckoutClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
     orderItems: Array<{ name: string; price_cents: number; quantity: number }>,
-    sellerAccountId: string
+    sellerAccountId: string,
   ) => {
     e.preventDefault();
 
@@ -66,7 +66,7 @@ const OrderList = ({ orders }: OrderListProps) => {
       const checkoutUrl = await createStripeCheckoutSession(
         orderItems,
         sellerAccountId,
-        slug
+        slug,
       );
 
       if (checkoutUrl) {
@@ -150,7 +150,7 @@ const OrderList = ({ orders }: OrderListProps) => {
                     price_cents: op.product.price * 100,
                     quantity: op.quantity,
                   })),
-                  order?.store?.stripeAccountId ?? ""
+                  order?.store?.stripeAccountId ?? "",
                 )
               }
               variant="ghost"

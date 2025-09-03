@@ -1,9 +1,6 @@
 // Next
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
-
-// Clerk
-import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 
 // Data
 import { getStoreBySlug } from "../../data/get-store-by-slug";
@@ -11,19 +8,9 @@ import { getStoreBySlug } from "../../data/get-store-by-slug";
 // Components
 import Method from "./components/method";
 
-interface StoreSlugProps {
-  params: Promise<{ slug: string }>;
-}
+const StorePage = async () => {
+  const store = await getStoreBySlug("software-company");
 
-const StorePage = async ({ params }: StoreSlugProps) => {
-  const { slug } = await params;
-  const { userId } = await auth();
-
-  if (!userId || !slug) {
-    redirect("/");
-  }
-
-  const store = await getStoreBySlug(slug);
   if (!store) {
     return notFound;
   }
@@ -48,14 +35,14 @@ const StorePage = async ({ params }: StoreSlugProps) => {
       </div>
       <div className="grid grid-cols-2 gap-4 pt-14">
         <Method
-          slug={slug}
+          slug={store.slug}
           option="PICKUP"
           buttonText="Para retirar"
           imageAlt="Para Retirar no Local"
           imageUrl="/take_away.png"
         />
         <Method
-          slug={slug}
+          slug={store.slug}
           option="MOTORBIKE"
           buttonText="Para entregar"
           imageAlt="Para Entregar"
