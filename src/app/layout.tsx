@@ -19,8 +19,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
 // Context
-import { CartProvider } from "../app/(slug)/menu/context/cart";
-import { MethodProvider } from "../app/(slug)/context/MethodContext";
+import { CartProvider } from "../app/[slug]/menu/context/cart";
+import { MethodProvider } from "../app/[slug]/context/MethodContext";
 
 // Toastfy
 import { ToastContainer } from "react-toastify";
