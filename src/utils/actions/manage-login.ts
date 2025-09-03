@@ -35,11 +35,11 @@ export async function checkPassword(password: string, base64Hash: string) {
 }
 
 // CREATE COOKIE
-export async function createLoginSession(username: string) {
+export async function createLoginSession(email: string) {
   const expiresAt = new Date(Date.now() + LOGIN_EXPIRATION_MINUTES_VARIABLE);
 
   // TODO: Set JWT here.
-  const loginSession = await signJWT({ username, expiresAt });
+  const loginSession = await signJWT({ email, expiresAt });
 
   const cookieStore = await cookies(); // Create cookie here.
 
@@ -77,7 +77,7 @@ export async function checkLoginSession() {
 
   if (!JWTPayload) return false;
 
-  return JWTPayload?.username;
+  return JWTPayload?.email;
 }
 
 // CHECK USER LOGGED
@@ -91,7 +91,7 @@ export async function requireLoginSessionOrRedirect() {
 
 // SIGN JWT
 type JWTPayloadProps = {
-  username: string;
+  email: string;
   expiresAt: Date;
 };
 
@@ -117,7 +117,7 @@ export async function checkJWT(payloadJWT?: string) {
       algorithms: ["HS256"],
     });
 
-    return payload;
+    return payload as { email: string; expiresAt: Date };
   } catch {
     console.log("Token pe inválido.");
   }
