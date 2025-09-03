@@ -5,7 +5,7 @@ import LoginPage from "./page";
 
 // Mock
 import { SignInButton } from "@/__mocks__/@clerk/nextjs";
-import { loginAction } from "@/src/actions/authentication/signIn";
+import { signIn } from "../../../actions/authentication/signIn";
 
 describe("SignIn Include Form", () => {
   // Form Role
@@ -55,9 +55,9 @@ describe("SignIn Include Form", () => {
     fireEvent.submit(form);
 
     await waitFor(() => {
-      expect(loginAction).toHaveBeenCalled();
+      expect(signIn).toHaveBeenCalled();
 
-      const [prevState, formData] = (loginAction as jest.Mock).mock.calls[0];
+      const [prevState, formData] = (signIn as jest.Mock).mock.calls[0];
 
       expect(prevState.success).toBe(true);
       expect(formData.get("email")).toBe(email);

@@ -12,19 +12,16 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../src/components/ui/card";
+} from "../../../components/ui/card";
 
 // Clerk
 import { useUser } from "@clerk/nextjs";
 
 // Components
-import Form from "../components/form";
+import Form from "../../components/form";
 
 // Zod
-import {
-  FormSchema,
-  generateFormSchema,
-} from "../../../src/utils/zod/form-schema";
+import { FormSchema, generateFormSchema } from "../../../utils/zod/form-schema";
 
 const formSchema: FormSchema = generateFormSchema({ mode: "signin" });
 
@@ -46,9 +43,9 @@ export default function LoginPage() {
         className="h-[420px] max-w-full flex justify-between flex-1"
       >
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Faça login na sua conta.</CardTitle>
           <CardDescription className="text-xs">
-            Enter your email and password below to login to your account
+            Insira seu login e sua senha para finalizar seu pedido.
           </CardDescription>
         </CardHeader>
 

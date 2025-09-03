@@ -44,9 +44,9 @@ export default function CreateUser() {
         className="h-[450px] max-w-full flex justify-between flex-1"
       >
         <CardHeader>
-          <CardTitle>Create your account</CardTitle>
+          <CardTitle>Crie sua conta.</CardTitle>
           <CardDescription className="text-xs">
-            Enter your datas below to create your account now
+            Insira seus dados abaixo para criar sua conta.
           </CardDescription>
         </CardHeader>
 
