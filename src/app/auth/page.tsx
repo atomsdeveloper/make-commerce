@@ -18,7 +18,15 @@ import {
 import { useUser } from "@clerk/nextjs";
 
 // Components
-import FormSignIn from "./components/form";
+import Form from "../components/form";
+
+// Zod
+import {
+  FormSchema,
+  generateFormSchema,
+} from "../../../src/utils/zod/form-schema";
+
+const formSchema: FormSchema = generateFormSchema({ mode: "signin" });
 
 export default function LoginPage() {
   const { isSignedIn } = useUser();
@@ -35,7 +43,7 @@ export default function LoginPage() {
       <Card
         role="group"
         aria-label="Formulário de login"
-        className="h-[450px] max-w-full flex justify-between flex-1"
+        className="h-[420px] max-w-full flex justify-between flex-1"
       >
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
@@ -44,7 +52,7 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
 
-        <FormSignIn />
+        <Form formSchema={formSchema} mode="signin" />
       </Card>
     </div>
   );

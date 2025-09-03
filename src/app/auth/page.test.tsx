@@ -5,7 +5,7 @@ import LoginPage from "./page";
 
 // Mock
 import { SignInButton } from "@/__mocks__/@clerk/nextjs";
-import { loginAction } from "@/src/actions/signIn";
+import { loginAction } from "@/src/actions/authentication/signIn";
 
 describe("SignIn Include Form", () => {
   // Form Role
