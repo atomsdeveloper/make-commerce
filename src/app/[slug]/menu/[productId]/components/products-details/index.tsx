@@ -20,7 +20,7 @@ import { ScrollArea } from "../../../../../../components/ui/scroll-area";
 import { formatCurrency } from "../../../../../../helpers/format-currency";
 
 // Components
-import CartSheet from "../../../components/sheet";
+import Bag from "../../../components/bag";
 
 // Context
 import { CartContext } from "../../../context/cart";
@@ -141,7 +141,7 @@ const ProductsDetails = ({ product }: ProductsDetailsProps) => {
           Adicionar à sacola
         </Button>
       </div>
-      <CartSheet />
+      <Bag />
     </>
   );
 };

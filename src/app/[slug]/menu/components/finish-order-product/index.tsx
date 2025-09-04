@@ -1,26 +1,16 @@
 "use client";
 
-// Database
 import { Method } from "@prisma/client";
-
-// Icons
 import { Loader2Icon } from "lucide-react";
-
-// Next
 import { useParams, useSearchParams } from "next/navigation";
-
-// React
 import { FormProvider, useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { useContext, useTransition } from "react";
-
 import { toast } from "sonner";
 
-// Zod
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Components UI
 import { Button } from "../../../../../components/ui/button";
 import {
   Drawer,
@@ -41,36 +31,27 @@ import {
 } from "../../../../../components/ui/form";
 import { Input } from "../../../../../components/ui/input";
 
-// Actions
 import { createOrder } from "../../actions/create-orders";
-
-// Context
 import { CartContext } from "../../context/cart";
-
-// Helpers
 import { isValidCpf } from "../../../../../helpers/cpf";
 
-// Craindo esquema de válidação de formulário com o zod.
 export const formSchema = z.object({
-  // Dados do formúlario.
-  name: z.string().trim().min(1, {
-    message: "O nome é obrigatório",
-  }),
+  name: z.string().trim().min(1, { message: "O nome é obrigatório" }),
   cpf: z
     .string()
     .trim()
-    .min(1, {
-      message: "O CPF é obrigatório.",
-    })
-    .refine((value) => isValidCpf(value), {
-      message: "CPF inválido",
-    }),
+    .min(1, { message: "O CPF é obrigatório." })
+    .refine((value) => isValidCpf(value), { message: "CPF inválido" }),
+  street: z.string().trim().min(1, { message: "A rua é obrigatória" }),
+  number: z.string().trim().min(1, { message: "O número é obrigatório" }),
+  city: z.string().trim().min(1, { message: "A cidade é obrigatória" }),
+  state: z.string().trim().min(1, { message: "O estado é obrigatório" }),
+  country: z.string().trim().min(1, { message: "O país é obrigatório" }),
+  zipCode: z.string().trim().min(1, { message: "O CEP é obrigatório" }),
 });
 
-// Criando o tipo TypeFormSchema para receber a referência de formSchema acima.
 type TypeFormSchema = z.infer<typeof formSchema>;
 
-// Tipo para o fechar o Dialog de finalizar o Pedido.
 interface FinishOrderDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -79,42 +60,50 @@ interface FinishOrderDialogProps {
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   const { productsCart } = useContext(CartContext);
   const { slug } = useParams<{ slug: string }>();
-
   const [isPending, startTransition] = useTransition();
 
-  // React useForm usa o TypeFormSchema criado acima como tipos.
   const form = useForm<TypeFormSchema>({
-    // React useForm usa o formSchema criado acima para válidar o formulário com os dados.
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       cpf: "",
+      street: "",
+      number: "",
+      city: "",
+      state: "",
+      country: "",
+      zipCode: "",
     },
     shouldUnregister: true,
   });
 
   const consumptionMethod = useSearchParams().get("method") as Method;
 
-  // Só vai ser executado se os dados do formulário forem válidos.
-  const onSubmit = async (data: TypeFormSchema) => {
-    try {
-      startTransition(async () => {
+  const onSubmit = (data: TypeFormSchema) => {
+    startTransition(async () => {
+      try {
         await createOrder({
           consumptionMethod,
           customerCpf: data.cpf,
           customerName: data.name,
           products: productsCart,
+          city: data.city,
+          country: data.country,
+          number: data.number,
+          state: data.state,
+          street: data.street,
+          zipCode: data.zipCode,
           slug,
         });
 
         onOpenChange(false);
         toast.success("Pedido finalizado com sucesso.");
-      });
-      toast.success("Pedido finalizado com sucesso.");
-    } catch (error) {
-      toast.error(`Erro ao finalizar o pedido. Tente novamente. ${error}`);
-    }
+      } catch (error) {
+        toast.error(`Erro ao finalizar o pedido. Tente novamente. ${error}`);
+      }
+    });
   };
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerTrigger asChild></DrawerTrigger>
@@ -123,13 +112,13 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         <DrawerHeader>
           <DrawerTitle>Finalizar Pedido</DrawerTitle>
           <DrawerDescription>
-            Insira sua informações abaixo para finalizar o seu pedido
+            Insira suas informações abaixo para finalizar o seu pedido
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="p-5">
+        <div className="p-5 overflow-y-auto">
           <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {/* NOME */}
               <FormField
                 control={form.control}
@@ -137,11 +126,13 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
-
                     <FormControl>
-                      <Input placeholder="Dígite seu nome..." {...field} />
+                      <Input
+                        placeholder="Digite seu nome..."
+                        {...field}
+                        disabled={isPending}
+                      />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -154,24 +145,133 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Seu CPF</FormLabel>
-
                     <FormControl>
-                      {/* Máscara de CPF */}
                       <PatternFormat
-                        placeholder="Dígite seu CPF"
+                        placeholder="Digite seu CPF"
                         format="###.###.###-##"
                         mask="_"
                         customInput={Input}
                         {...field}
+                        disabled={isPending}
                       />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* Botões do Dialog */}
+              {/* ENDEREÇO */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="street"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rua</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ex.: Av. Paulista"
+                          {...field}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Número</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ex.: 1000"
+                          {...field}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cidade</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ex.: São Paulo"
+                          {...field}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Estado</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ex.: SP"
+                          {...field}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>País</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ex.: Brasil"
+                          {...field}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="zipCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>CEP</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ex.: 01311-000"
+                          {...field}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Ações */}
               <DrawerFooter>
                 <Button
                   type="submit"
@@ -179,12 +279,18 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                   variant="destructive"
                   disabled={isPending}
                 >
-                  {isPending && <Loader2Icon className="animate-spin" />}
+                  {isPending && (
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Finalizar
                 </Button>
 
                 <DrawerClose asChild>
-                  <Button variant="outline" className="w-full rounded-full">
+                  <Button
+                    variant="outline"
+                    className="w-full rounded-full"
+                    disabled={isPending}
+                  >
                     Cancelar
                   </Button>
                 </DrawerClose>

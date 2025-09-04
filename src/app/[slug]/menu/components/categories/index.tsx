@@ -26,7 +26,7 @@ import {
 } from "../../../../../components/ui/scroll-area";
 
 // Components
-import CartSheet from "../sheet";
+import Bag from "../bag";
 import ProductsList from "../products";
 
 interface StoreCategoriesProps {
@@ -112,7 +112,7 @@ const StoreCategories = ({ store }: StoreCategoriesProps) => {
           </div>
 
           <Button onClick={toggleIsOpen}>Ver sacola</Button>
-          <CartSheet />
+          <Bag />
         </div>
       )}
     </div>

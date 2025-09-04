@@ -13,13 +13,20 @@ import { formatCurrency } from "../../../../../helpers/format-currency";
 // Context
 import { CartContext } from "../../context/cart";
 
+// import { useRouter } from "next/navigation";
+
 import CartProductItem from "../card-product-items";
 import FinishOrderDialog from "../finish-order-product";
 
-const CartSheet = () => {
+const Bag = () => {
+  // const router = useRouter();
   const [finishOrderDialogIsOpen, setFinishOrderDialogIsOpen] = useState(false);
 
   const { isOpen, toggleIsOpen, productsCart, total } = useContext(CartContext);
+
+  async function handleButtonFinishOrder() {
+    setFinishOrderDialogIsOpen(true);
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={toggleIsOpen}>
@@ -46,8 +53,10 @@ const CartSheet = () => {
 
           {/* Botão que altera o estado para true para limpar dados do formulário após fechar o dialog */}
           <Button
+            type="button"
+            title="Botão para finalizar pedido"
             className="w-full rounded-full"
-            onClick={() => setFinishOrderDialogIsOpen(true)}
+            onClick={handleButtonFinishOrder}
           >
             Finalizar pedido
           </Button>
@@ -62,4 +71,4 @@ const CartSheet = () => {
   );
 };
 
-export default CartSheet;
+export default Bag;

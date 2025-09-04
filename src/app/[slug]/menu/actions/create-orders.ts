@@ -24,12 +24,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 interface CreateOrderInputProps {
   customerName: string;
   customerCpf: string;
-  products: Array<{
-    id: string;
-    quantity: number;
-  }>;
+  products: Array<{ id: string; quantity: number }>;
   consumptionMethod: Method;
   slug: string;
+  street?: string;
+  number?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  zipCode?: string;
 }
 
 export const createOrder = async (input: CreateOrderInputProps) => {
@@ -40,7 +43,7 @@ export const createOrder = async (input: CreateOrderInputProps) => {
   });
 
   if (!store) {
-    throw new Error("Restaurante não encontrado.");
+    throw new Error("Loja não encontrada.");
   }
 
   const productsWithPrice = await db.products.findMany({
@@ -118,6 +121,14 @@ export const createOrder = async (input: CreateOrderInputProps) => {
         connect: { id: store.id },
       },
       stripeSessionId: session.id,
+      ...(input.consumptionMethod !== "PICKUP" && {
+        street: input.street!,
+        number: input.number!,
+        city: input.city!,
+        state: input.state!,
+        country: input.country!,
+        zipCode: input.zipCode!,
+      }),
     },
   });
   revalidatePath(`/${input.slug}/orders`); // Limpa cache antes de redirecionar á página.
