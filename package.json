@@ -15,7 +15,7 @@
     "test:watch": "jest --watch"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": [
+    "{src, app}/**/*.{js,ts,jsx,tsx}": [
       "eslint --fix",
       "prettier --write"
     ]
