@@ -14,10 +14,6 @@ export const metadata: Metadata = {
 // Styles
 import "./globals.css";
 
-// Clerk
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-
 // Context
 import { CartProvider } from "../app/[slug]/menu/context/cart";
 import { MethodProvider } from "../app/[slug]/context/MethodContext";
@@ -34,16 +30,7 @@ export default function RootLayout({
     <html lang="pt-BR" className="h-full">
       <body className={`${poppins.className} antialiased h-full`}>
         <CartProvider>
-          <MethodProvider>
-            <ClerkProvider
-              dynamic
-              appearance={{
-                baseTheme: dark,
-              }}
-            >
-              {children}
-            </ClerkProvider>
-          </MethodProvider>
+          <MethodProvider>{children}</MethodProvider>
         </CartProvider>
         <ToastContainer />
       </body>

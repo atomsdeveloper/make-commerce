@@ -44,12 +44,15 @@ import type { Category, Products } from "@prisma/client";
 export type CategoriesWithProducts = Category & { products: Products[] };
 
 const StoreCategories = ({ store }: StoreCategoriesProps) => {
+  // Context
   const { productsCart, total, toggleIsOpen, totalQuantity } =
     useContext(CartContext);
 
+  // States
   const [selectedCategory, setSelectedCategory] =
     useState<CategoriesWithProducts>(store.categories[0]);
 
+  // Actions Functions
   const handleCategoryClick = (category: CategoriesWithProducts) => {
     setSelectedCategory(category);
   };
@@ -57,6 +60,7 @@ const StoreCategories = ({ store }: StoreCategoriesProps) => {
   const getCategoryButtonVariant = (category: CategoriesWithProducts) => {
     return selectedCategory.id === category.id ? "default" : "secondary";
   };
+
   return (
     <div className="relative z-50 mt-[-150px] rounded-3xl bg-white">
       <div className="p-5">

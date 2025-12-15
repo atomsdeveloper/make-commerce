@@ -1,5 +1,5 @@
 // Next
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
 // Stripe
 import Stripe from "stripe";
@@ -7,18 +7,24 @@ import Stripe from "stripe";
 // Database
 import { db } from "../../../../lib/prisma";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-08-27.basil",
-  typescript: true,
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("STRIPE SECRET KEY not set");
+}
+
+const stripe = new Stripe(stripeSecretKey, {
+  apiVersion: "2025-08-27.basil", // use uma versão oficial
 });
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const { email, storeId } = req.body;
+export async function POST(req: NextRequest) {
+  const { email, storeId } = await req.json();
   const account = await stripe.accounts.create({ type: "express", email });
-  const origin = req.headers.origin!;
+  const origin = req.headers.get("origin");
+
+  if (!origin) {
+    throw new Error("ORIGIN not defined");
+  }
 
   await db.store.update({
     where: { id: storeId },
@@ -31,5 +37,6 @@ export default async function handler(
     return_url: `${origin}/onboard/success`,
     type: "account_onboarding",
   });
-  res.status(200).json({ url: link.url, accountId: account.id });
+
+  return NextResponse.json({ url: link.url, accountId: account.id });
 }

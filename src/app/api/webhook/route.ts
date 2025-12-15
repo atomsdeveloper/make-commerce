@@ -1,28 +1,35 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Next
 import { NextResponse } from "next/server";
-
-import { buffer } from "micro";
+import { Buffer } from "buffer";
 
 // Stripe
-import stripe from "../../../config/stripe";
-
-export const config = { api: { bodyParser: false } };
+import Stripe from "stripe";
 
 export async function POST(req: Request) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const body = await buffer(req as any);
-  const sig = req.headers.get("stripe-signature")!;
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
-  const event = stripe.webhooks.constructEvent(
-    body,
-    sig,
-    process.env.STRIPE_WEBHOOK_SECRET!
-  );
+  if (!stripeSecretKey) {
+    throw new Error("STRIPE SECRET KEY not set");
+  }
+
+  const stripe = new Stripe(stripeSecretKey, {
+    apiVersion: "2025-08-27.basil",
+    typescript: true,
+  });
+
+  const buf = await req.arrayBuffer();
+  const body = Buffer.from(buf);
+  const sig = req.headers.get("stripe-signature");
+
+  if (!sig) {
+    throw new Error("SIG not defined");
+  }
+
+  const event = stripe.webhooks.constructEvent(body, sig, stripeSecretKey);
 
   if (event.type === "checkout.session.completed") {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sess = event.data.object as any;
+    const sess = event.data.object;
     // salve no DB: sess.id, sess.amount_total, sess.application_fee_amount, etc.
   }
 

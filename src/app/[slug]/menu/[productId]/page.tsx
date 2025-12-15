@@ -16,7 +16,7 @@ const ProductsPage = async ({ params }: ProductsPageProps) => {
   const { slug, productId } = await params;
 
   if (!productId || !slug) {
-    return notFound;
+    return notFound();
   }
 
   const products = await db.products.findUnique({
@@ -33,11 +33,11 @@ const ProductsPage = async ({ params }: ProductsPageProps) => {
   });
 
   if (!products) {
-    return notFound;
+    return notFound();
   }
 
   if (products.store.slug.toUpperCase() !== slug.toUpperCase()) {
-    return notFound;
+    return notFound();
   }
 
   return (

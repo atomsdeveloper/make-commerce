@@ -1,16 +1,23 @@
 "use server";
 
+// Stripe
 import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-05-28.basil",
-});
-
 interface CheckoutItem {
   name: string;
   price_cents: number;
   quantity: number;
 }
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("STRIPE SECRET KEY not set");
+}
+
+const stripe = new Stripe(stripeSecretKey, {
+  apiVersion: "2025-08-27.basil",
+  typescript: true,
+});
 
 export async function createStripeCheckoutSession(
   items: CheckoutItem[],

@@ -10,7 +10,7 @@ import StoreHeader from "./components/header";
 
 interface StoreMenuPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ method?: string }>; // ⚡ searchParams é Promise
+  searchParams: Promise<{ method?: string }>;
 }
 
 const hasMethod = (method: string) => {

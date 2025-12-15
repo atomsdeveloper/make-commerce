@@ -8,7 +8,7 @@ const StoreSlug = async () => {
   const store = await db.store.findFirst();
 
   if (!store) {
-    return notFound;
+    return notFound();
   }
 
   redirect(`${store.slug}`);

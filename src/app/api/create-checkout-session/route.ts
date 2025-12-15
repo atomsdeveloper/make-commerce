@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Stripe
-import stripe from "../../../config/stripe";
+import Stripe from "stripe";
 
 // Constants
 import { NEXT_PUBLIC_BASE_URL_VARIABLE } from "@/src/utils/constants";
@@ -14,6 +14,17 @@ type CheckoutItem = {
   quantity: number;
 };
 
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("STRIPE SECRET KEY not set");
+}
+
+const stripe = new Stripe(stripeSecretKey, {
+  apiVersion: "2025-08-27.basil",
+  typescript: true,
+});
+
 export async function POST(req: NextRequest) {
   const { items, sellerAccountId } = await req.json();
 
@@ -22,7 +33,7 @@ export async function POST(req: NextRequest) {
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    line_items: (items as CheckoutItem[]).map((item: CheckoutItem) => ({
+    line_items: items.map((item: CheckoutItem) => ({
       price_data: {
         currency: "brl",
         product_data: { name: item.name },

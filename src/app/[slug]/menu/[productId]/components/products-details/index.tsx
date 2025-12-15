@@ -69,8 +69,8 @@ const ProductsDetails = ({ product }: ProductsDetailsProps) => {
 
   return (
     <>
-      <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl p-3 flex-auto flex flex-col overflow-hidden">
-        <div className="h-full overflow-hidden">
+      <div className="relative z-50 mt-[-0.5rem] rounded-t-3xl p-3 flex-auto flex flex-col">
+        <div className="min-h-0 flex-1">
           {/* store */}
           <div className="flex items-center gap-1.5 rounded-full">
             <Image
@@ -111,15 +111,15 @@ const ProductsDetails = ({ product }: ProductsDetailsProps) => {
             </div>
           </div>
 
-          <ScrollArea className="max-h-72 overflow-auto">
-            {/* about */}
-            <div className="mt-6 space-y-2">
-              <h4 className="font-semibold">Sobre</h4>
-              <p className="text-sm text-muted-foreground">
-                {product.description}
-              </p>
-            </div>
+          {/* about */}
+          <div className="mt-6 space-y-2">
+            <h4 className="font-semibold">Sobre</h4>
+            <p className="text-sm text-muted-foreground">
+              {product.description}
+            </p>
+          </div>
 
+          <ScrollArea className="max-h-72">
             {/* ingredients */}
             <div className="mt-6 space-y-2 h-full">
               <div className="flex items-center gap-1">

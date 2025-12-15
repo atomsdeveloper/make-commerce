@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: __dirname,
   allowedDevOrigins:
     process.env.NODE_ENV === "development"
       ? ["https://fc0a9cbfde9e.ngrok-free.app"]

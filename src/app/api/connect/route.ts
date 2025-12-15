@@ -1,13 +1,21 @@
 // Server
 import { NextRequest, NextResponse } from "next/server";
 
+// Stripe
 import Stripe from "stripe";
 
 // Database
 import { db } from "../../../lib/prisma";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("STRIPE SECRET KEY not set");
+}
+
+const stripe = new Stripe(stripeSecretKey, {
   apiVersion: "2025-08-27.basil",
+  typescript: true,
 });
 
 export async function POST(req: NextRequest) {

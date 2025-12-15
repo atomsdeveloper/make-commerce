@@ -6,8 +6,15 @@ import Stripe from "stripe";
 // Database
 import { db } from "../../../lib/prisma";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-08-27.basil", // Use a sua versão de API, se for diferente
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("STRIPE SECRET KEY not set");
+}
+
+const stripe = new Stripe(stripeSecretKey, {
+  apiVersion: "2025-08-27.basil",
+  typescript: true,
 });
 
 /**
@@ -67,9 +74,13 @@ export async function updateOrderStatusBySession(
 export async function handleStripeWebhook(event: Stripe.Event) {
   switch (event.type) {
     case "checkout.session.completed":
-      const session = event.data.object as Stripe.Checkout.Session;
+      const session = event.data.object as Stripe.Checkout.Session | null;
+
+      if (!session) {
+        throw new Error("SESSION not found");
+      }
+
       return session;
-      break;
     // Adicione outros casos conforme necessário
     default:
       console.warn(`Webhook não tratado: ${event.type}`);

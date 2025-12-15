@@ -13,22 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                String              @id @default(uuid())
-  clerkUserId       String              @unique // ID vindo do Clerk
-  name              String?
-  email             String?             @unique
-  password          String?
-  role              Role
-  image             String?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-}
-
-enum Role {
-  ADMIN
-  READ
-}
 model Store {
   id             String         @id @default(uuid())
   name           String

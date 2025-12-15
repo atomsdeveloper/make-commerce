@@ -14,14 +14,16 @@ import { updateOrderStatusBySession } from "./actions";
 import SuccessClientComponent from "./components";
 
 interface SuccessPageProps {
-  searchParams: {
-    session_id?: string;
-  };
+  searchParams: Promise<{ session_id?: string }>;
 }
 
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   const params = await searchParams;
   const sessionId = params.session_id;
+
+  if (!searchParams) {
+    return <p>Session ID não fornecida</p>;
+  }
 
   if (!sessionId) {
     notFound();
@@ -29,10 +31,19 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
   let sessionDetails = null;
   let order = null;
+
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-      apiVersion: "2025-05-28.basil",
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+    if (!stripeSecretKey) {
+      throw new Error("STRIPE SECRET KEY not set");
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: "2025-08-27.basil",
+      typescript: true,
     });
+
     sessionDetails = await stripe.checkout.sessions.retrieve(sessionId);
 
     order = await db.order.findUnique({
@@ -50,7 +61,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
     await updateOrderStatusBySession(
       order?.stripeSessionId as string,
-      "PAYMENT_CONFIRMED"
+      "PAYMENT_CONFIRMED",
     );
   } catch (error) {
     console.error("Erro ao buscar sessão do Stripe:", error);

@@ -97,9 +97,6 @@ const OrderList = ({ orders }: OrderListProps) => {
       </div>
 
       {orders.map((order) => {
-        const isCheckoutFinished =
-          order.status === "FINISHED" || order.status === "PAYMENT_CONFIRMED";
-
         return (
           <Card key={order.id} className="border-none w-full h-full">
             <CardContent className="space-y-5 p-5">
@@ -141,7 +138,7 @@ const OrderList = ({ orders }: OrderListProps) => {
               </p>
             </CardContent>
             <Button
-              className={`h-full w-full bg-transparent text-center hover:cursor-pointer`}
+              className={`h-full w-full bg-transparent text-center disabled:cursor-not-allowed cursor-pointer`}
               onClick={(e) =>
                 handleCheckoutClick(
                   e,
@@ -154,7 +151,10 @@ const OrderList = ({ orders }: OrderListProps) => {
                 )
               }
               variant="ghost"
-              disabled={isCheckoutFinished}
+              disabled={
+                order.status === "PAYMENT_CONFIRMED" ||
+                order.status === "FINISHED"
+              }
             >
               Finalizar pedido
             </Button>
